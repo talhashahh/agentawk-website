@@ -1,0 +1,143 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { Megaphone, Send, Users, CalendarClock, CheckCheck, Eye, Tag } from "lucide-react";
+import { Section, SectionHeading, Reveal, Glow } from "@/components/ui/Section";
+import { ChannelBadge } from "@/components/channels";
+import { useCycle } from "@/lib/hooks";
+import { cn } from "@/lib/cn";
+
+function Counter({ to, ms = 1400 }: { to: number; ms?: number }) {
+  const [v, setV] = useState(0);
+  useEffect(() => {
+    let raf = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const p = Math.min(1, (now - start) / ms);
+      setV(Math.round(to * (1 - Math.pow(1 - p, 3))));
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [to, ms]);
+  return <>{v.toLocaleString()}</>;
+}
+
+const DOTS = Array.from({ length: 48 });
+
+function CampaignDemo() {
+  // 0 = ready, 1 = sending, 2 = delivered
+  const { ref, index: phase } = useCycle<HTMLDivElement>(3, 2600);
+  const [round, setRound] = useState(0);
+  useEffect(() => {
+    if (phase === 1) setRound((r) => r + 1);
+  }, [phase]);
+
+  return (
+    <div ref={ref} className="grid items-center gap-6 lg:grid-cols-[1fr_auto_1fr]">
+      {/* composer */}
+      <div className="glass rounded-3xl p-5">
+        <p className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wider text-slate-400">
+          <Megaphone size={14} className="text-brand" /> New campaign
+        </p>
+        <div className="mt-4 rounded-2xl bg-white/5 p-4">
+          <p className="text-[11px] text-slate-500">Message</p>
+          <p className="mt-1 text-[14px] leading-relaxed text-white">
+            Eid Mubarak! 🌙 Enjoy <span className="font-bold text-brand">30% off</span> on everything this weekend. Reply YES to get your code.
+          </p>
+        </div>
+        <div className="mt-3 grid grid-cols-2 gap-2 text-[12px]">
+          <div className="flex items-center gap-2 rounded-xl bg-white/5 px-3 py-2.5 text-slate-300">
+            <Tag size={14} className="text-amber-300" /> VIP customers
+          </div>
+          <div className="flex items-center gap-2 rounded-xl bg-white/5 px-3 py-2.5 text-slate-300">
+            <CalendarClock size={14} className="text-sky-300" /> Send now
+          </div>
+        </div>
+        <motion.div
+          className={cn("mt-4 flex items-center justify-center gap-2 rounded-2xl py-3 text-sm font-bold transition-colors", phase === 0 ? "bg-brand text-ink" : "bg-white/10 text-white")}
+          animate={phase === 0 ? { scale: [1, 1.04, 1] } : { scale: 1 }}
+          transition={{ duration: 0.9, repeat: phase === 0 ? Infinity : 0 }}
+        >
+          <Send size={16} /> {phase === 0 ? "Send to 2,400 contacts" : phase === 1 ? "Sending…" : "Sent!"}
+        </motion.div>
+      </div>
+
+      {/* flying messages */}
+      <div className="relative hidden h-40 w-28 lg:block" aria-hidden>
+        {phase === 1 &&
+          Array.from({ length: 7 }).map((_, i) => (
+            <motion.span
+              key={`${round}-${i}`}
+              className="absolute left-0 flex h-7 w-7 items-center justify-center rounded-full bg-brand text-ink shadow-[0_0_20px_var(--brand)]"
+              style={{ top: `${10 + ((i * 37) % 80)}%` }}
+              initial={{ x: 0, opacity: 0, scale: 0.4 }}
+              animate={{ x: 110, opacity: [0, 1, 1, 0], scale: [0.4, 1, 1, 0.6] }}
+              transition={{ duration: 1, delay: i * 0.18, ease: "easeInOut" }}
+            >
+              <Send size={12} />
+            </motion.span>
+          ))}
+      </div>
+
+      {/* audience */}
+      <div className="glass rounded-3xl p-5">
+        <p className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wider text-slate-400">
+          <Users size={14} className="text-brand" /> Audience
+        </p>
+        <div className="mt-4 grid grid-cols-8 gap-2">
+          {DOTS.map((_, i) => (
+            <motion.span
+              key={`${round}-${i}`}
+              className={cn("aspect-square rounded-full transition-colors duration-300", phase >= 1 ? "bg-brand" : "bg-white/10")}
+              style={{ transitionDelay: phase >= 1 ? `${i * 35}ms` : "0ms" }}
+              animate={{ scale: phase >= 1 ? [1, 1.3, 1] : 1 }}
+              transition={{ delay: phase >= 1 ? i * 0.035 : 0, duration: 0.35 }}
+            />
+          ))}
+        </div>
+        <div className="mt-5 grid grid-cols-3 gap-2 text-center">
+          {[
+            { label: "Sent", to: 2400, icon: Send },
+            { label: "Delivered", to: 2381, icon: CheckCheck },
+            { label: "Read", to: 1964, icon: Eye },
+          ].map((s) => (
+            <div key={s.label} className="rounded-xl bg-white/5 py-2.5">
+              <s.icon size={14} className="mx-auto text-brand" />
+              <p className="mt-1 font-display text-lg font-bold text-white">
+                {phase >= 1 ? <Counter key={`${round}-${s.label}`} to={s.to} /> : 0}
+              </p>
+              <p className="text-[10px] uppercase tracking-wider text-slate-500">{s.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function Campaigns() {
+  return (
+    <Section id="campaigns">
+      <SectionHeading
+        eyebrow="Campaigns"
+        icon={<Megaphone size={14} />}
+        title="Write once."
+        highlight="Reach thousands in one click."
+        subtitle="Announce a sale, share news or send reminders to hundreds of contacts at once. Pick who should get it by tag, schedule it, and watch delivered and read numbers climb."
+      />
+      <div className="relative mt-16">
+        <Glow className="left-1/3 top-0 h-80 w-80" />
+        <Reveal><CampaignDemo /></Reveal>
+      </div>
+      <Reveal className="mt-8 flex items-center justify-center gap-3 text-sm text-slate-400">
+        <span className="flex -space-x-1.5">
+          <ChannelBadge id="whatsapp" className="h-7 w-7 ring-2 ring-ink" />
+          <ChannelBadge id="messenger" className="h-7 w-7 ring-2 ring-ink" />
+        </span>
+        Broadcast on WhatsApp and Messenger
+      </Reveal>
+    </Section>
+  );
+}
