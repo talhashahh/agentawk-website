@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Bot, Workflow, MessageSquareText, GitBranch, UserPlus, Clock, Sparkles, LifeBuoy, Send, Wand2 } from "lucide-react";
+import { Bot, MessageSquareText, GitBranch, UserPlus, Clock, Sparkles, LifeBuoy, Send, Wand2 } from "lucide-react";
 import { Section, SectionHeading, Reveal, Glow } from "@/components/ui/Section";
 import { ChannelBadge } from "@/components/channels";
 import { Bubble, TypingDots } from "@/components/ui/Chat";
@@ -33,7 +33,7 @@ function FlowDemo() {
     <div ref={ref} className="relative grid gap-6 overflow-hidden rounded-3xl border border-blue-200/70 bg-gradient-to-br from-[#e6f0ff] via-[#eef5ff] to-[#dbeafe] p-6 shadow-[0_40px_100px_-45px_rgba(37,99,235,0.55)] md:grid-cols-[1.2fr_1fr]">
       <div className="relative">
         <p className="mb-4 flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wider text-brand">
-          <Workflow size={14} /> Smart Flow · Price enquiry
+          <Bot size={14} /> Bot · Price enquiry
         </p>
         <div className="flex flex-col items-start">
           {NODES.map((n, i) => {

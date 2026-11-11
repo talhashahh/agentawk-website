@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Megaphone, Send, Users, CalendarClock, CheckCheck, Eye, Tag } from "lucide-react";
+import { Megaphone, Send, Users, CalendarClock, CheckCheck, Eye, Tag, UserRound, Check } from "lucide-react";
 import { Section, SectionHeading, Reveal, Glow } from "@/components/ui/Section";
+import { Avatar } from "@/components/ui/Avatar";
 import { ChannelBadge } from "@/components/channels";
 import { useCycle } from "@/lib/hooks";
 import { cn } from "@/lib/cn";
@@ -24,7 +25,10 @@ function Counter({ to, ms = 1400 }: { to: number; ms?: number }) {
   return <>{v.toLocaleString()}</>;
 }
 
-const DOTS = Array.from({ length: 48 });
+const FIRST = ["Ali", "Sara", "Omar", "Ayesha", "Hamza", "Zara", "Bilal", "Hina", "Usman", "Maryam", "Fahad", "Noor", "Daniyal", "Iqra", "Saad", "Fatima"];
+const LAST = ["Khan", "Ahmed", "Raza", "Malik", "Shah", "Qureshi", "Butt", "Iqbal", "Siddiqui", "Javed", "Hussain", "Chaudhry"];
+// 48 contacts with varied names, so every avatar gets its own initials and colour.
+const AUDIENCE = Array.from({ length: 48 }, (_, i) => `${FIRST[(i * 5) % FIRST.length]} ${LAST[(i * 7) % LAST.length]}`);
 
 function CampaignDemo() {
   // 0 = ready, 1 = sending, 2 = delivered
@@ -87,14 +91,33 @@ function CampaignDemo() {
           <Users size={14} className="text-brand" /> Audience
         </p>
         <div className="mt-4 grid grid-cols-8 gap-2">
-          {DOTS.map((_, i) => (
-            <motion.span
-              key={`${round}-${i}`}
-              className={cn("aspect-square rounded-full transition-colors duration-300", phase >= 1 ? "bg-brand" : "bg-slate-200")}
-              style={{ transitionDelay: phase >= 1 ? `${i * 35}ms` : "0ms" }}
-              animate={{ scale: phase >= 1 ? [1, 1.3, 1] : 1 }}
-              transition={{ delay: phase >= 1 ? i * 0.035 : 0, duration: 0.35 }}
-            />
+          {AUDIENCE.map((name, i) => (
+            <span key={i} className="relative aspect-square">
+              {/* empty slot before the campaign goes out */}
+              <span className="absolute inset-0 flex items-center justify-center rounded-full bg-slate-100 text-slate-300">
+                <UserRound className="h-1/2 w-1/2" />
+              </span>
+              {/* the contact's avatar pops in as their message is sent */}
+              {phase >= 1 && (
+                <motion.span
+                  key={round}
+                  className="absolute inset-0"
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: [0, 1.2, 1], opacity: 1 }}
+                  transition={{ delay: i * 0.035, duration: 0.4, ease: "easeOut" }}
+                >
+                  <Avatar name={name} className="h-full w-full text-[9px] sm:text-[11px] lg:text-xs" />
+                  <motion.span
+                    className="absolute -bottom-0.5 -right-0.5 hidden h-[38%] w-[38%] items-center justify-center rounded-full bg-[#25d366] text-white ring-2 ring-white sm:flex"
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.5 + i * 0.035, duration: 0.25 }}
+                  >
+                    <Check className="h-3/4 w-3/4" strokeWidth={3} />
+                  </motion.span>
+                </motion.span>
+              )}
+            </span>
           ))}
         </div>
         <div className="mt-5 grid grid-cols-3 gap-2 text-center">

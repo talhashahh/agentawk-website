@@ -11,7 +11,7 @@ export const links = {
 export const company = {
   name: "AgentAwk",
   legalName: "EZAUQ Pvt Ltd",
-  email: "hello@agentawk.com",
+  email: "barshan.hassan@ezauq.com",
   // Leave empty to hide them on the site; fill in when the real numbers are ready.
   phone: "",
   whatsapp: "", // digits only, used for wa.me links

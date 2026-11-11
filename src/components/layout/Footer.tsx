@@ -69,7 +69,6 @@ export function Footer() {
       </div>
       <div className="mx-auto mt-14 flex max-w-7xl flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-[13px] text-gray-500 sm:flex-row">
         <p>© {new Date().getFullYear()} {company.name} by {company.legalName}. All rights reserved.</p>
-        <p>Made with care in Pakistan</p>
       </div>
     </footer>
   );

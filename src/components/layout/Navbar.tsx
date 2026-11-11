@@ -122,9 +122,6 @@ export function Navbar() {
         </ul>
 
         <div className="hidden items-center gap-2 lg:flex">
-          <a href={links.login} className="px-3 py-2 text-sm font-semibold text-fg hover:text-brand">
-            Log in
-          </a>
           <ButtonLink href={links.signup}>Start free</ButtonLink>
         </div>
 
@@ -169,9 +166,6 @@ export function Navbar() {
               ))}
             </ul>
             <div className="mt-3 flex gap-2">
-              <ButtonLink href={links.login} variant="ghost" className="flex-1">
-                Log in
-              </ButtonLink>
               <ButtonLink href={links.signup} className="flex-1">
                 Start free
               </ButtonLink>
