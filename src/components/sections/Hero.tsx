@@ -1,7 +1,8 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Sparkles, Zap, CheckCheck } from "lucide-react";
+import { ArrowRight, Sparkles, Zap, CheckCheck, BadgeCheck } from "lucide-react";
+import { SiMeta } from "react-icons/si";
 import { BotMark } from "@/components/brand/Logo";
 import { ButtonLink } from "@/components/ui/Button";
 import { CHANNEL_LIST, ChannelBadge, type ChannelId } from "@/components/channels";
@@ -145,14 +146,28 @@ export function Hero() {
 
       <div className="relative mx-auto grid max-w-7xl items-center gap-20 lg:grid-cols-[1.05fr_1fr]">
         <div>
-          <motion.span
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 rounded-full border border-line bg-white px-4 py-1.5 text-sm text-slate-600 shadow-sm"
-          >
-            <Sparkles size={15} className="text-brand" />
-            The all-in-one customer conversation platform
-          </motion.span>
+          <div className="flex flex-wrap items-center gap-3">
+            <motion.span
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="inline-flex items-center gap-2 rounded-full border border-[#0866ff]/25 bg-white py-1.5 pl-2 pr-4 text-sm font-semibold text-fg shadow-[0_8px_24px_-12px_rgba(8,102,255,0.6)]"
+            >
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#0866ff]/10">
+                <SiMeta size={17} className="text-[#0866ff]" />
+              </span>
+              Official Meta Partner
+              <BadgeCheck size={17} className="fill-[#0866ff] text-white" />
+            </motion.span>
+            <motion.span
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="inline-flex items-center gap-2 rounded-full border border-line bg-white px-4 py-1.5 text-sm text-slate-600 shadow-sm"
+            >
+              <Sparkles size={15} className="text-brand" />
+              The all-in-one customer conversation platform
+            </motion.span>
+          </div>
 
           <h1 className="mt-6 font-display text-[2.6rem] font-extrabold leading-[1.04] tracking-tight text-fg sm:text-6xl lg:text-7xl">
             {words.map((w, i) => (
