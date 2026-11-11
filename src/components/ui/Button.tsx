@@ -13,8 +13,8 @@ export function ButtonLink({ variant = "primary", size = "md", className, childr
         "group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full font-semibold transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand",
         size === "lg" ? "px-7 py-3.5 text-base" : "px-5 py-2.5 text-sm",
         variant === "primary"
-          ? "bg-brand text-ink shadow-[0_0_40px_-8px_var(--brand)] hover:shadow-[0_0_60px_-6px_var(--brand)] hover:-translate-y-0.5"
-          : "border border-white/15 bg-white/5 text-white hover:border-white/30 hover:bg-white/10",
+          ? "bg-brand text-white shadow-[0_12px_30px_-10px_var(--brand)] hover:-translate-y-0.5 hover:shadow-[0_18px_40px_-10px_var(--brand)]"
+          : "border border-line bg-white text-fg shadow-sm hover:border-brand/40 hover:text-brand",
         className,
       )}
     >

@@ -15,7 +15,7 @@ const INNER = ["Maria Aslam", "Usman Tariq", "Sana Iqbal", "Hamza Ali", "Nida Pe
 function Ring({ names, size, duration, reverse, avatar }: { names: string[]; size: number; duration: number; reverse?: boolean; avatar: string }) {
   return (
     <motion.div
-      className="absolute left-1/2 top-1/2 rounded-full border border-dashed border-white/10"
+      className="absolute left-1/2 top-1/2 rounded-full border border-dashed border-brand/20"
       style={{ width: `${size}%`, height: `${size}%`, x: "-50%", y: "-50%" }}
       animate={{ rotate: reverse ? -360 : 360 }}
       transition={{ duration, repeat: Infinity, ease: "linear" }}
@@ -39,9 +39,9 @@ function Ring({ names, size, duration, reverse, avatar }: { names: string[]; siz
 }
 
 const TAGS = [
-  { label: "Friends", icon: Heart, cls: "left-[2%] top-[18%] text-pink-300 bg-pink-500/15" },
-  { label: "VIP", icon: Star, cls: "right-[0%] top-[30%] text-amber-300 bg-amber-500/15" },
-  { label: "Family", icon: Users, cls: "left-[8%] bottom-[12%] text-sky-300 bg-sky-500/15" },
+  { label: "Friends", icon: Heart, cls: "left-[2%] top-[18%] text-pink-600 bg-pink-100 shadow-sm" },
+  { label: "VIP", icon: Star, cls: "right-[0%] top-[30%] text-amber-700 bg-amber-100 shadow-sm" },
+  { label: "Family", icon: Users, cls: "left-[8%] bottom-[12%] text-sky-700 bg-sky-100 shadow-sm" },
 ];
 
 const PROFILES: { name: string; phone: string; city: string; birthday: string; tags: string[]; channels: ChannelId[] }[] = [
@@ -55,9 +55,9 @@ function FriendsCircle() {
     <div className="relative mx-auto aspect-square w-full max-w-[460px]">
       <Ring names={OUTER} size={100} duration={60} avatar="h-12 w-12 text-sm" />
       <Ring names={INNER} size={62} duration={45} reverse avatar="h-10 w-10 text-xs" />
-      <div className="absolute left-1/2 top-1/2 flex h-28 w-28 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full border border-brand/30 bg-ink-2 shadow-[0_0_70px_-12px_var(--brand)]">
+      <div className="absolute left-1/2 top-1/2 flex h-28 w-28 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full border border-brand/20 bg-white shadow-[0_20px_60px_-15px_var(--brand)]">
         <UsersRound size={26} className="text-brand" />
-        <span className="mt-1 text-[11px] font-semibold text-slate-300">Your circle</span>
+        <span className="mt-1 text-[11px] font-semibold text-slate-600">Your circle</span>
       </div>
       {TAGS.map((t, i) => (
         <motion.span
@@ -83,7 +83,7 @@ function ProfileCard() {
           <div className="flex items-center gap-4">
             <Avatar name={p.name} className="h-14 w-14 text-base" />
             <div>
-              <p className="font-display text-lg font-semibold text-white">{p.name}</p>
+              <p className="font-display text-lg font-semibold text-fg">{p.name}</p>
               <div className="mt-1 flex gap-1.5">
                 {p.channels.map((c) => (
                   <ChannelBadge key={c} id={c} className="h-6 w-6" />
@@ -92,9 +92,9 @@ function ProfileCard() {
             </div>
           </div>
           <ul className="mt-5 grid gap-2 text-[13px]">
-            <li className="flex items-center gap-2.5 rounded-xl bg-white/5 px-3 py-2.5 text-slate-300"><Phone size={14} className="text-brand" /> {p.phone}</li>
-            <li className="flex items-center gap-2.5 rounded-xl bg-white/5 px-3 py-2.5 text-slate-300"><MapPin size={14} className="text-brand" /> {p.city}</li>
-            <li className="flex items-center gap-2.5 rounded-xl bg-white/5 px-3 py-2.5 text-slate-300"><Cake size={14} className="text-brand" /> Birthday · {p.birthday}</li>
+            <li className="flex items-center gap-2.5 rounded-xl bg-soft px-3 py-2.5 text-slate-600"><Phone size={14} className="text-brand" /> {p.phone}</li>
+            <li className="flex items-center gap-2.5 rounded-xl bg-soft px-3 py-2.5 text-slate-600"><MapPin size={14} className="text-brand" /> {p.city}</li>
+            <li className="flex items-center gap-2.5 rounded-xl bg-soft px-3 py-2.5 text-slate-600"><Cake size={14} className="text-brand" /> Birthday · {p.birthday}</li>
           </ul>
           <div className="mt-4 flex flex-wrap gap-1.5">
             {p.tags.map((t) => (
@@ -124,8 +124,8 @@ function GroupsCard() {
           <Avatar name="Sana Iqbal" className="absolute bottom-0 right-0 h-8 w-8 text-[10px]" />
         </div>
         <div className="flex-1">
-          <p className="font-display font-semibold text-white">Friends Circle 🎉</p>
-          <p className="text-[12px] text-slate-400">WhatsApp group · 4 members</p>
+          <p className="font-display font-semibold text-fg">Friends Circle 🎉</p>
+          <p className="text-[12px] text-muted">WhatsApp group · 4 members</p>
         </div>
         <ChannelBadge id="whatsapp" className="h-8 w-8" />
       </div>
@@ -141,7 +141,7 @@ function GroupsCard() {
               className="flex items-end gap-2"
             >
               <Avatar name={m.name} className="h-6 w-6 text-[9px]" />
-              <div className="rounded-2xl rounded-bl-md bg-white/10 px-3 py-1.5 text-[12px] text-slate-100">
+              <div className="rounded-2xl rounded-bl-md border border-line bg-white px-3 py-1.5 text-[12px] text-slate-700">
                 <span className="block text-[10px] font-semibold text-brand">{m.name}</span>
                 {m.text}
               </div>
@@ -170,8 +170,8 @@ function GalleryCard() {
     <div className="glass flex h-full flex-col rounded-3xl p-6">
       <div className="flex items-center justify-between">
         <div>
-          <p className="font-display font-semibold text-white">Media Gallery</p>
-          <p className="text-[12px] text-slate-400">Photos, videos, voice notes & files</p>
+          <p className="font-display font-semibold text-fg">Media Gallery</p>
+          <p className="text-[12px] text-muted">Photos, videos, voice notes & files</p>
         </div>
         <motion.span
           className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/15 text-brand"
@@ -200,17 +200,17 @@ function GalleryCard() {
                 ))}
               </div>
             ) : (
-              <m.icon size={20} className="text-white/85" />
+              <m.icon size={20} className="text-white/90" />
             )}
           </motion.div>
         ))}
       </div>
       <div className="mt-4">
-        <div className="flex justify-between text-[11px] text-slate-400">
+        <div className="flex justify-between text-[11px] text-muted">
           <span>Every file a customer sends is saved</span>
           <span className="font-semibold text-brand">Searchable</span>
         </div>
-        <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/5">
+        <div className="mt-2 h-2 overflow-hidden rounded-full bg-soft">
           <motion.div className="h-full rounded-full bg-brand" initial={{ width: "0%" }} whileInView={{ width: "72%" }} viewport={{ once: true }} transition={{ duration: 1.8, ease: "easeOut" }} />
         </div>
       </div>

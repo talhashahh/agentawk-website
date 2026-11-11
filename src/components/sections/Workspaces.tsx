@@ -30,7 +30,7 @@ function WorkspaceCard({ ws, delay }: { ws: (typeof WORKSPACES)[number]; delay: 
             <ws.icon size={20} />
           </span>
           <div>
-            <p className="font-semibold text-white">{ws.name}</p>
+            <p className="font-semibold text-fg">{ws.name}</p>
             <p className="text-[11px] text-slate-500">Workspace</p>
           </div>
         </div>
@@ -39,7 +39,7 @@ function WorkspaceCard({ ws, delay }: { ws: (typeof WORKSPACES)[number]; delay: 
             <ChannelBadge key={c} id={c} className="h-7 w-7" />
           ))}
         </div>
-        <div className="mt-4 flex min-h-9 items-center justify-between rounded-xl bg-white/5 px-3 py-2">
+        <div className="mt-4 flex min-h-9 items-center justify-between rounded-xl bg-soft px-3 py-2">
           <div className="flex -space-x-2">
             <AnimatePresence>
               {ws.team.slice(0, shown).map((m) => (
@@ -76,15 +76,15 @@ export function Workspaces() {
       <div className="relative mx-auto mt-16 max-w-5xl">
         {/* agency */}
         <Reveal className="relative z-10 mx-auto w-fit">
-          <div className="flex items-center gap-3 rounded-2xl border border-brand/30 bg-ink-2 px-5 py-4 shadow-[0_0_60px_-15px_var(--brand)]">
+          <div className="flex items-center gap-3 rounded-2xl border border-brand/20 bg-white px-5 py-4 shadow-[0_20px_50px_-20px_var(--brand)]">
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand/15">
               <BotMark className="h-7 w-auto" />
             </span>
             <div>
-              <p className="flex items-center gap-1.5 font-semibold text-white">
+              <p className="flex items-center gap-1.5 font-semibold text-fg">
                 <Building2 size={15} className="text-brand" /> Your Agency
               </p>
-              <p className="text-[12px] text-slate-400">Billing, users & every workspace</p>
+              <p className="text-[12px] text-muted">Billing, users & every workspace</p>
             </div>
           </div>
         </Reveal>
@@ -95,7 +95,7 @@ export function Workspaces() {
             <g key={x}>
               <motion.path
                 d={`M500 0 C 500 60, ${x} 50, ${x} 120`}
-                stroke="rgba(255,255,255,0.12)"
+                stroke="rgba(37,99,235,0.15)"
                 strokeWidth="2"
                 fill="none"
                 initial={{ pathLength: 0 }}
@@ -127,9 +127,9 @@ export function Workspaces() {
       <div className="mx-auto mt-16 grid max-w-5xl gap-6 md:grid-cols-3">
         {STEPS.map((s, i) => (
           <Reveal key={s.n} delay={i * 0.1} className="relative">
-            <span className="font-display text-5xl font-extrabold text-white/5">{s.n}</span>
-            <h3 className="-mt-5 font-display text-lg font-semibold text-white">{s.title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-slate-400">{s.text}</p>
+            <span className="font-display text-5xl font-extrabold text-brand/15">{s.n}</span>
+            <h3 className="-mt-5 font-display text-lg font-semibold text-fg">{s.title}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted">{s.text}</p>
           </Reveal>
         ))}
       </div>

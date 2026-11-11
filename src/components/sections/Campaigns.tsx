@@ -38,25 +38,25 @@ function CampaignDemo() {
     <div ref={ref} className="grid items-center gap-6 lg:grid-cols-[1fr_auto_1fr]">
       {/* composer */}
       <div className="glass rounded-3xl p-5">
-        <p className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wider text-slate-400">
+        <p className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wider text-muted">
           <Megaphone size={14} className="text-brand" /> New campaign
         </p>
-        <div className="mt-4 rounded-2xl bg-white/5 p-4">
+        <div className="mt-4 rounded-2xl bg-soft p-4">
           <p className="text-[11px] text-slate-500">Message</p>
-          <p className="mt-1 text-[14px] leading-relaxed text-white">
+          <p className="mt-1 text-[14px] leading-relaxed text-fg">
             Eid Mubarak! 🌙 Enjoy <span className="font-bold text-brand">30% off</span> on everything this weekend. Reply YES to get your code.
           </p>
         </div>
         <div className="mt-3 grid grid-cols-2 gap-2 text-[12px]">
-          <div className="flex items-center gap-2 rounded-xl bg-white/5 px-3 py-2.5 text-slate-300">
-            <Tag size={14} className="text-amber-300" /> VIP customers
+          <div className="flex items-center gap-2 rounded-xl bg-soft px-3 py-2.5 text-slate-600">
+            <Tag size={14} className="text-amber-500" /> VIP customers
           </div>
-          <div className="flex items-center gap-2 rounded-xl bg-white/5 px-3 py-2.5 text-slate-300">
-            <CalendarClock size={14} className="text-sky-300" /> Send now
+          <div className="flex items-center gap-2 rounded-xl bg-soft px-3 py-2.5 text-slate-600">
+            <CalendarClock size={14} className="text-sky-500" /> Send now
           </div>
         </div>
         <motion.div
-          className={cn("mt-4 flex items-center justify-center gap-2 rounded-2xl py-3 text-sm font-bold transition-colors", phase === 0 ? "bg-brand text-ink" : "bg-white/10 text-white")}
+          className={cn("mt-4 flex items-center justify-center gap-2 rounded-2xl py-3 text-sm font-bold transition-colors", phase === 0 ? "bg-brand text-white" : "bg-slate-200 text-fg")}
           animate={phase === 0 ? { scale: [1, 1.04, 1] } : { scale: 1 }}
           transition={{ duration: 0.9, repeat: phase === 0 ? Infinity : 0 }}
         >
@@ -70,7 +70,7 @@ function CampaignDemo() {
           Array.from({ length: 7 }).map((_, i) => (
             <motion.span
               key={`${round}-${i}`}
-              className="absolute left-0 flex h-7 w-7 items-center justify-center rounded-full bg-brand text-ink shadow-[0_0_20px_var(--brand)]"
+              className="absolute left-0 flex h-7 w-7 items-center justify-center rounded-full bg-brand text-white shadow-[0_0_20px_var(--brand)]"
               style={{ top: `${10 + ((i * 37) % 80)}%` }}
               initial={{ x: 0, opacity: 0, scale: 0.4 }}
               animate={{ x: 110, opacity: [0, 1, 1, 0], scale: [0.4, 1, 1, 0.6] }}
@@ -83,14 +83,14 @@ function CampaignDemo() {
 
       {/* audience */}
       <div className="glass rounded-3xl p-5">
-        <p className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wider text-slate-400">
+        <p className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wider text-muted">
           <Users size={14} className="text-brand" /> Audience
         </p>
         <div className="mt-4 grid grid-cols-8 gap-2">
           {DOTS.map((_, i) => (
             <motion.span
               key={`${round}-${i}`}
-              className={cn("aspect-square rounded-full transition-colors duration-300", phase >= 1 ? "bg-brand" : "bg-white/10")}
+              className={cn("aspect-square rounded-full transition-colors duration-300", phase >= 1 ? "bg-brand" : "bg-slate-200")}
               style={{ transitionDelay: phase >= 1 ? `${i * 35}ms` : "0ms" }}
               animate={{ scale: phase >= 1 ? [1, 1.3, 1] : 1 }}
               transition={{ delay: phase >= 1 ? i * 0.035 : 0, duration: 0.35 }}
@@ -103,9 +103,9 @@ function CampaignDemo() {
             { label: "Delivered", to: 2381, icon: CheckCheck },
             { label: "Read", to: 1964, icon: Eye },
           ].map((s) => (
-            <div key={s.label} className="rounded-xl bg-white/5 py-2.5">
+            <div key={s.label} className="rounded-xl bg-soft py-2.5">
               <s.icon size={14} className="mx-auto text-brand" />
-              <p className="mt-1 font-display text-lg font-bold text-white">
+              <p className="mt-1 font-display text-lg font-bold text-fg">
                 {phase >= 1 ? <Counter key={`${round}-${s.label}`} to={s.to} /> : 0}
               </p>
               <p className="text-[10px] uppercase tracking-wider text-slate-500">{s.label}</p>
@@ -131,10 +131,10 @@ export function Campaigns() {
         <Glow className="left-1/3 top-0 h-80 w-80" />
         <Reveal><CampaignDemo /></Reveal>
       </div>
-      <Reveal className="mt-8 flex items-center justify-center gap-3 text-sm text-slate-400">
+      <Reveal className="mt-8 flex items-center justify-center gap-3 text-sm text-muted">
         <span className="flex -space-x-1.5">
-          <ChannelBadge id="whatsapp" className="h-7 w-7 ring-2 ring-ink" />
-          <ChannelBadge id="messenger" className="h-7 w-7 ring-2 ring-ink" />
+          <ChannelBadge id="whatsapp" className="h-7 w-7 ring-2 ring-white" />
+          <ChannelBadge id="messenger" className="h-7 w-7 ring-2 ring-white" />
         </span>
         Broadcast on WhatsApp and Messenger
       </Reveal>

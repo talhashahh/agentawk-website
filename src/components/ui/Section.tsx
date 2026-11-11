@@ -54,10 +54,10 @@ export function SectionHeading({
   return (
     <Reveal className={cn("max-w-3xl", align === "center" ? "mx-auto text-center" : "text-left")}>
       <Eyebrow icon={icon}>{eyebrow}</Eyebrow>
-      <h2 className="mt-5 font-display text-3xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl">
+      <h2 className="mt-5 font-display text-3xl font-bold leading-[1.1] tracking-tight text-fg sm:text-5xl">
         {title} {highlight && <span className="text-gradient">{highlight}</span>}
       </h2>
-      {subtitle && <p className="mt-5 text-base leading-relaxed text-slate-400 sm:text-lg">{subtitle}</p>}
+      {subtitle && <p className="mt-5 text-base leading-relaxed text-muted sm:text-lg">{subtitle}</p>}
     </Reveal>
   );
 }
@@ -84,7 +84,7 @@ export function Glow({ className, color = "var(--brand)" }: { className?: string
     <div
       aria-hidden
       className={cn("pointer-events-none absolute rounded-full blur-[110px]", className)}
-      style={{ background: color, opacity: 0.22 }}
+      style={{ background: color, opacity: 0.16 }}
     />
   );
 }

@@ -36,11 +36,12 @@ const COLUMNS = [
 
 export function Footer() {
   return (
-    <footer className="relative border-t border-white/5 px-4 pb-10 pt-16 sm:px-6">
+    <footer className="relative overflow-hidden bg-[#0a0a0c] px-4 pb-10 pt-16 sm:px-6">
+      <div aria-hidden className="absolute left-1/2 top-0 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-brand to-transparent" />
       <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.3fr_2fr]">
         <div>
-          <Logo />
-          <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-400">
+          <Logo onDark />
+          <p className="mt-4 max-w-sm text-sm leading-relaxed text-gray-400">
             One inbox for WhatsApp, Instagram, Messenger, Telegram and your website, with bots, campaigns and AI built in.
           </p>
           <div className="mt-5 flex gap-2">
@@ -56,7 +57,7 @@ export function Footer() {
               <ul className="mt-4 grid gap-2.5">
                 {col.items.map((it) => (
                   <li key={it.label}>
-                    <a href={it.href} className="text-sm text-slate-400 transition-colors hover:text-brand">
+                    <a href={it.href} className="text-sm text-gray-400 transition-colors hover:text-white">
                       {it.label}
                     </a>
                   </li>
@@ -66,7 +67,7 @@ export function Footer() {
           ))}
         </div>
       </div>
-      <div className="mx-auto mt-14 flex max-w-7xl flex-col items-center justify-between gap-3 border-t border-white/5 pt-6 text-[13px] text-slate-500 sm:flex-row">
+      <div className="mx-auto mt-14 flex max-w-7xl flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-[13px] text-gray-500 sm:flex-row">
         <p>© {new Date().getFullYear()} {company.name} by {company.legalName}. All rights reserved.</p>
         <p>Made with care in Pakistan</p>
       </div>

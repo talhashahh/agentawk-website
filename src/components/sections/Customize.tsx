@@ -8,13 +8,13 @@ import { BotMark } from "@/components/brand/Logo";
 import { DEFAULT_BRAND, useBrand } from "@/components/providers/BrandProvider";
 import { cn } from "@/lib/cn";
 
-const SWATCHES = ["#25d366", "#3b82f6", "#8b5cf6", "#ec4899", "#f97316", "#eab308", "#14b8a6", "#ef4444"];
+const SWATCHES = ["#2563eb", "#25d366", "#8b5cf6", "#ec4899", "#f97316", "#eab308", "#14b8a6", "#ef4444"];
 
 export function Customize() {
   const { brand, setBrand } = useBrand();
   const [name, setName] = useState("Your Brand");
   const [logo, setLogo] = useState<string | null>(null);
-  const [dark, setDark] = useState(true);
+  const [dark, setDark] = useState(false);
 
   useEffect(() => () => { if (logo) URL.revokeObjectURL(logo); }, [logo]);
 
@@ -28,7 +28,7 @@ export function Customize() {
     setBrand(DEFAULT_BRAND);
     setName("Your Brand");
     setLogo(null);
-    setDark(true);
+    setDark(false);
   };
 
   return (
@@ -44,7 +44,7 @@ export function Customize() {
       <div className="relative mt-16 grid items-center gap-10 lg:grid-cols-[1fr_1.25fr]">
         <Glow className="right-10 top-0 h-96 w-96" />
         <Reveal className="glass rounded-3xl p-6">
-          <p className="text-sm font-semibold text-white">1. Pick a brand color</p>
+          <p className="text-sm font-semibold text-fg">1. Pick a brand color</p>
           <div className="mt-3 flex flex-wrap gap-2.5">
             {SWATCHES.map((c) => (
               <button
@@ -52,37 +52,37 @@ export function Customize() {
                 onClick={() => setBrand(c)}
                 aria-label={`Use color ${c}`}
                 className={cn("relative h-10 w-10 rounded-full transition-transform hover:scale-110", brand === c && "scale-110")}
-                style={{ background: c, boxShadow: brand === c ? `0 0 0 3px #070b16, 0 0 0 5px ${c}` : undefined }}
+                style={{ background: c, boxShadow: brand === c ? `0 0 0 3px #ffffff, 0 0 0 5px ${c}` : undefined }}
               >
                 {brand === c && <Check size={18} className="absolute inset-0 m-auto text-white" />}
               </button>
             ))}
-            <label className="relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-dashed border-white/30 text-slate-300 hover:border-white/60" title="Any color">
+            <label className="relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-dashed border-brand/30 text-slate-500 hover:border-brand" title="Any color">
               <Palette size={16} />
               <input type="color" value={brand} onChange={(e) => setBrand(e.target.value)} className="absolute inset-0 cursor-pointer opacity-0" aria-label="Pick any color" />
             </label>
           </div>
 
-          <p className="mt-6 text-sm font-semibold text-white">2. Name it</p>
+          <p className="mt-6 text-sm font-semibold text-fg">2. Name it</p>
           <input
             value={name}
             maxLength={18}
             onChange={(e) => setName(e.target.value)}
-            className="mt-3 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition focus:border-brand"
+            className="mt-3 w-full rounded-xl border border-line bg-white px-4 py-3 text-fg outline-none transition focus:border-brand"
             aria-label="Brand name"
           />
 
-          <p className="mt-6 text-sm font-semibold text-white">3. Drop in your logo</p>
-          <label className="mt-3 flex cursor-pointer items-center gap-3 rounded-xl border border-dashed border-white/15 bg-white/[0.02] px-4 py-3.5 text-sm text-slate-400 transition hover:border-brand hover:text-white">
+          <p className="mt-6 text-sm font-semibold text-fg">3. Drop in your logo</p>
+          <label className="mt-3 flex cursor-pointer items-center gap-3 rounded-xl border border-dashed border-brand/30 bg-white px-4 py-3.5 text-sm text-muted transition hover:border-brand hover:text-brand">
             <Upload size={18} className="text-brand" /> {logo ? "Logo added, try another" : "Upload an image (stays in your browser)"}
             <input type="file" accept="image/*" onChange={onFile} className="hidden" />
           </label>
 
           <div className="mt-6 flex items-center justify-between">
-            <button onClick={() => setDark((d) => !d)} className="flex items-center gap-2 rounded-full bg-white/5 px-4 py-2 text-[13px] text-slate-300 hover:bg-white/10">
+            <button onClick={() => setDark((d) => !d)} className="flex items-center gap-2 rounded-full bg-soft px-4 py-2 text-[13px] text-slate-600 hover:bg-blue-100">
               {dark ? <Moon size={14} /> : <Sun size={14} />} {dark ? "Dark" : "Light"} theme
             </button>
-            <button onClick={reset} className="flex items-center gap-1.5 text-[13px] text-slate-400 hover:text-white">
+            <button onClick={reset} className="flex items-center gap-1.5 text-[13px] text-muted hover:text-brand">
               <RotateCcw size={14} /> Reset
             </button>
           </div>
@@ -92,7 +92,7 @@ export function Customize() {
           <motion.div
             layout
             className={cn(
-              "overflow-hidden rounded-3xl border shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)] transition-colors duration-500",
+              "overflow-hidden rounded-3xl border shadow-[0_40px_100px_-30px_rgba(30,64,175,0.45)] transition-colors duration-500",
               dark ? "border-white/10 bg-[#0b1122]" : "border-slate-200 bg-white",
             )}
           >
@@ -109,11 +109,10 @@ export function Customize() {
                 <div className="mb-3 flex items-center gap-2 px-1">
                   <AnimatePresence mode="wait">
                     {logo ? (
-                      // eslint-disable-next-line @next/next/no-img-element
                       <motion.img key={logo} src={logo} alt="" className="h-8 w-8 rounded-lg object-contain" initial={{ scale: 0 }} animate={{ scale: 1 }} />
                     ) : (
                       <motion.span key="bot" initial={{ scale: 0 }} animate={{ scale: 1 }}>
-                        <BotMark className="h-8 w-auto" />
+                        <BotMark className="h-8 w-auto" color="var(--brand)" />
                       </motion.span>
                     )}
                   </AnimatePresence>

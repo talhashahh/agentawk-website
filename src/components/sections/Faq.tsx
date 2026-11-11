@@ -43,21 +43,21 @@ export function Faq() {
           const isOpen = open === i;
           return (
             <Reveal key={f.q} delay={i * 0.05}>
-              <div className={cn("rounded-2xl border transition-colors", isOpen ? "border-brand/30 bg-white/[0.04]" : "border-white/8 bg-white/[0.02]")}>
+              <div className={cn("rounded-2xl border transition-colors", isOpen ? "border-brand/30 bg-white shadow-[0_20px_50px_-30px_rgba(37,99,235,0.5)]" : "border-line bg-white/60")}>
                 <button
                   onClick={() => setOpen(isOpen ? null : i)}
                   aria-expanded={isOpen}
                   className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
                 >
-                  <span className="font-semibold text-white">{f.q}</span>
-                  <motion.span animate={{ rotate: isOpen ? 45 : 0 }} className={cn("flex h-7 w-7 shrink-0 items-center justify-center rounded-full", isOpen ? "bg-brand text-ink" : "bg-white/5 text-slate-300")}>
+                  <span className="font-semibold text-fg">{f.q}</span>
+                  <motion.span animate={{ rotate: isOpen ? 45 : 0 }} className={cn("flex h-7 w-7 shrink-0 items-center justify-center rounded-full", isOpen ? "bg-brand text-white" : "bg-soft text-slate-600")}>
                     <Plus size={16} />
                   </motion.span>
                 </button>
                 <AnimatePresence initial={false}>
                   {isOpen && (
                     <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-                      <p className="px-5 pb-5 text-[15px] leading-relaxed text-slate-400">{f.a}</p>
+                      <p className="px-5 pb-5 text-[15px] leading-relaxed text-muted">{f.a}</p>
                     </motion.div>
                   )}
                 </AnimatePresence>

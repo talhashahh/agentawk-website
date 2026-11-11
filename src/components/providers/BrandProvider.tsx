@@ -3,7 +3,7 @@
 import { createContext, useCallback, useContext, useState } from "react";
 import { MotionConfig } from "framer-motion";
 
-export const DEFAULT_BRAND = "#25d366";
+export const DEFAULT_BRAND = "#2563eb";
 
 type BrandContextValue = {
   brand: string;

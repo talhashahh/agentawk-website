@@ -28,7 +28,7 @@ export function Avatar({ name, className }: { name: string; className?: string }
   return (
     <span
       className={cn(
-        "inline-flex shrink-0 items-center justify-center rounded-full font-semibold text-white ring-2 ring-ink",
+        "inline-flex shrink-0 items-center justify-center rounded-full font-semibold text-white ring-2 ring-white",
         className ?? "h-9 w-9 text-xs",
       )}
       style={{ background: PALETTE[hash(name) % PALETTE.length] }}

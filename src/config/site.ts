@@ -11,10 +11,10 @@ export const links = {
 export const company = {
   name: "AgentAwk",
   legalName: "EZAUQ Pvt Ltd",
-  // TODO(confirm): real public contact details before going live.
   email: "hello@agentawk.com",
-  phone: "+92 300 0000000",
-  whatsapp: "923000000000", // digits only, used for wa.me links
+  // Leave empty to hide them on the site; fill in when the real numbers are ready.
+  phone: "",
+  whatsapp: "", // digits only, used for wa.me links
   address: "Pakistan",
 };
 
@@ -22,73 +22,18 @@ export type Plan = {
   id: string;
   name: string;
   tagline: string;
-  /** Monthly price in USD. null = shown as "Talk to us". */
-  price: number | null;
+  /** Monthly price in USD. */
+  price: number;
+  icon: "gift" | "wallet" | "zap" | "building";
+  workspaces: number;
+  contactsPerWorkspace: number;
   popular?: boolean;
-  highlights: string[];
-  note?: string;
 };
 
-// TODO(confirm): prices come from the live billing plans (billing_item_prices)
-// and the limits below are the plan defaults — confirm both before going live.
+// Same plans, prices and limits as the agency Billing → Plans page in the app.
 export const plans: Plan[] = [
-  {
-    id: "free-plan",
-    name: "Free",
-    tagline: "Try AgentAwk on your own",
-    price: 0,
-    highlights: [
-      "1 workspace",
-      "1 agent seat",
-      "2 channels",
-      "1,000 contacts",
-      "Shared inbox",
-      "Help Assistant",
-    ],
-  },
-  {
-    id: "premium-plan",
-    name: "Premium",
-    tagline: "For growing businesses",
-    price: null,
-    highlights: [
-      "5 channels per workspace",
-      "Up to 10 AI chat assistants",
-      "Campaigns & broadcasts",
-      "Bots & Smart Flows",
-      "Contact import & custom fields",
-      "Roles & permissions",
-    ],
-  },
-  {
-    id: "ignite-plan",
-    name: "Ignite",
-    tagline: "For scaling teams",
-    price: null,
-    popular: true,
-    highlights: [
-      "10 workspaces included",
-      "15 agent seats",
-      "Up to 20 AI chat assistants",
-      "Teams & assignment rules",
-      "Your logo & colors",
-      "API access",
-    ],
-    note: "$19 per extra workspace",
-  },
-  {
-    id: "enterprise-plan",
-    name: "Enterprise",
-    tagline: "Built for resellers",
-    price: null,
-    highlights: [
-      "20 workspaces included",
-      "25 agent seats",
-      "Up to 50 AI chat assistants",
-      "Full white-label",
-      "Agency dashboard",
-      "Priority support",
-    ],
-    note: "$16 per extra workspace",
-  },
+  { id: "free-plan", name: "Free", tagline: "Try it out, on us", price: 0, icon: "gift", workspaces: 1, contactsPerWorkspace: 50 },
+  { id: "premium-plan", name: "Premium plan", tagline: "For growing businesses", price: 19, icon: "wallet", workspaces: 5, contactsPerWorkspace: 1000 },
+  { id: "ignite-plan", name: "Ignite plan", tagline: "For scaling teams", price: 299, icon: "zap", workspaces: 15, contactsPerWorkspace: 3000, popular: true },
+  { id: "enterprise-plan", name: "Enterprise plan", tagline: "Built for resellers", price: 599, icon: "building", workspaces: 50, contactsPerWorkspace: 10000 },
 ];

@@ -83,14 +83,14 @@ function PhoneChat({ story }: { story: Story }) {
 
   return (
     <div ref={ref} className="relative mx-auto w-[300px] sm:w-[320px]">
-      <div className="relative rounded-[2.6rem] border border-white/15 bg-[#0a0f1d] p-2.5 shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)]">
+      <div className="relative rounded-[2.6rem] border border-slate-700 bg-slate-900 p-2.5 shadow-[0_40px_100px_-30px_rgba(30,64,175,0.55)]">
         <div className="absolute left-1/2 top-3 z-10 h-5 w-24 -translate-x-1/2 rounded-full bg-black" />
         <div className="overflow-hidden rounded-[2.1rem] bg-[#0d1426]">
           {/* header */}
           <div className="flex items-center gap-2.5 px-4 pb-3 pt-9" style={{ background: `color-mix(in oklab, ${c.color} 22%, #0d1426)` }}>
             <ChevronLeft size={18} className="text-white/70" />
             <div className="relative">
-              <Avatar name={story.customer} className="h-9 w-9 text-[11px]" />
+              <Avatar name={story.customer} className="h-9 w-9 text-[11px] ring-[#0d1426]!" />
               <ChannelBadge id={story.id} className="absolute -bottom-1 -right-1 h-4.5 w-4.5 ring-2 ring-[#0d1426]" iconClassName="h-2.5 w-2.5" />
             </div>
             <div className="min-w-0 flex-1">
@@ -104,7 +104,7 @@ function PhoneChat({ story }: { story: Story }) {
           <div className="flex h-[360px] flex-col justify-end gap-2.5 px-3.5 py-4">
             <AnimatePresence mode="popLayout">
               {story.chat.slice(0, shown).map((m, i) => (
-                <Bubble key={story.id + i} msg={m} accent={m.from === "customer" ? undefined : c.color} />
+                <Bubble key={story.id + i} msg={m} dark accent={m.from === "customer" ? undefined : c.color} />
               ))}
               {typing && (
                 <motion.div
@@ -114,7 +114,7 @@ function PhoneChat({ story }: { story: Story }) {
                   exit={{ opacity: 0 }}
                   className={cn("flex", next.from === "customer" ? "justify-start" : "justify-end")}
                 >
-                  <TypingDots />
+                  <TypingDots dark />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -182,8 +182,8 @@ export function Channels() {
           {STORIES.slice(3).map((s, i) => (
             <ChannelCard key={s.id} story={s} active={active === i + 3} onClick={() => { setActive(i + 3); setAuto(false); }} />
           ))}
-          <Reveal delay={0.2} className="rounded-2xl border border-dashed border-white/15 p-5 text-sm text-slate-400">
-            <span className="font-semibold text-white">One contact, every channel.</span> When the same customer writes from two apps,
+          <Reveal delay={0.2} className="rounded-2xl border border-dashed border-brand/25 bg-white/50 p-5 text-sm text-muted">
+            <span className="font-semibold text-fg">One contact, every channel.</span> When the same customer writes from two apps,
             you still see one person and one history.
           </Reveal>
         </div>
@@ -200,7 +200,9 @@ function ChannelCard({ story, active, onClick }: { story: Story; active: boolean
         onClick={onClick}
         className={cn(
           "relative w-full overflow-hidden rounded-2xl border p-5 text-left transition-all duration-500",
-          active ? "border-white/20 bg-white/[0.07]" : "border-white/5 bg-white/[0.02] hover:border-white/15 hover:bg-white/[0.04]",
+          active
+            ? "border-brand/30 bg-white shadow-[0_20px_50px_-25px_rgba(37,99,235,0.45)]"
+            : "border-line bg-white/60 hover:border-brand/30 hover:bg-white",
         )}
       >
         {active && (
@@ -212,10 +214,10 @@ function ChannelCard({ story, active, onClick }: { story: Story; active: boolean
         )}
         <div className="flex items-center gap-3">
           <ChannelBadge id={story.id} className="h-10 w-10" />
-          <h3 className="font-display text-lg font-semibold text-white">{story.title}</h3>
+          <h3 className="font-display text-lg font-semibold text-fg">{story.title}</h3>
           {active && <span className="ml-auto h-2 w-2 animate-pulse rounded-full" style={{ background: c.color }} />}
         </div>
-        <p className="mt-3 text-sm leading-relaxed text-slate-400">{story.desc}</p>
+        <p className="mt-3 text-sm leading-relaxed text-muted">{story.desc}</p>
       </button>
     </Reveal>
   );
