@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Megaphone, Send, Users, CalendarClock, CheckCheck, Eye, Tag, UserRound, Check } from "lucide-react";
 import { Section, SectionHeading, Reveal, Glow } from "@/components/ui/Section";
 import { Avatar } from "@/components/ui/Avatar";
-import { ChannelBadge } from "@/components/channels";
+import { ChannelBadge, type ChannelId } from "@/components/channels";
 import { useCycle } from "@/lib/hooks";
 import { cn } from "@/lib/cn";
 
@@ -24,6 +24,9 @@ function Counter({ to, ms = 1400 }: { to: number; ms?: number }) {
   }, [to, ms]);
   return <>{v.toLocaleString()}</>;
 }
+
+// Channel icons that fly from the composer to the audience while sending.
+const FLYING: ChannelId[] = ["whatsapp", "instagram", "messenger", "telegram"];
 
 const FIRST = ["Ali", "Sara", "Omar", "Ayesha", "Hamza", "Zara", "Bilal", "Hina", "Usman", "Maryam", "Fahad", "Noor", "Daniyal", "Iqra", "Saad", "Fatima"];
 const LAST = ["Khan", "Ahmed", "Raza", "Malik", "Shah", "Qureshi", "Butt", "Iqbal", "Siddiqui", "Javed", "Hussain", "Chaudhry"];
@@ -71,16 +74,16 @@ function CampaignDemo() {
       {/* flying messages */}
       <div className="relative hidden h-40 w-28 lg:block" aria-hidden>
         {phase === 1 &&
-          Array.from({ length: 7 }).map((_, i) => (
+          Array.from({ length: 8 }).map((_, i) => (
             <motion.span
               key={`${round}-${i}`}
-              className="absolute left-0 flex h-7 w-7 items-center justify-center rounded-full bg-brand text-white shadow-[0_0_20px_var(--brand)]"
+              className="absolute left-0"
               style={{ top: `${10 + ((i * 37) % 80)}%` }}
               initial={{ x: 0, opacity: 0, scale: 0.4 }}
               animate={{ x: 110, opacity: [0, 1, 1, 0], scale: [0.4, 1, 1, 0.6] }}
               transition={{ duration: 1, delay: i * 0.18, ease: "easeInOut" }}
             >
-              <Send size={12} />
+              <ChannelBadge id={FLYING[i % FLYING.length]} className="h-8 w-8 shadow-lg ring-2 ring-white" />
             </motion.span>
           ))}
       </div>
