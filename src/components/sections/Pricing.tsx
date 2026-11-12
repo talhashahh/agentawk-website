@@ -2,35 +2,38 @@
 
 import { useCallback, useState } from "react";
 import { motion } from "framer-motion";
+import { CreditCard, Receipt, Ticket, ShieldCheck, Gauge, Eye, Star, Check } from "lucide-react";
 import {
-  CreditCard, Receipt, Ticket, ShieldCheck, Gauge, Sparkles, ArrowRight, Gift, Wallet, Zap, Building2, LayoutGrid, Contact, Eye,
-} from "lucide-react";
-import { PlanDetailsModal } from "@/components/sections/PlanDetailsModal";
+  PlanDetailsModal, LimitBadge, PLAN_ICON, FEATURE_ICON, FEATURE_COLOR,
+} from "@/components/sections/PlanDetailsModal";
 import { Section, SectionHeading, Reveal, Glow } from "@/components/ui/Section";
 import { BotMark } from "@/components/brand/Logo";
-import { plans, links, type Plan } from "@/config/site";
-import { useCountUp, useSequence } from "@/lib/hooks";
+import { plans, PLAN_FEATURES, formatLimit, type LimitValue, type Plan } from "@/config/site";
+import { useSequence } from "@/lib/hooks";
 import { cn } from "@/lib/cn";
 
-const PLAN_ICON = { gift: Gift, wallet: Wallet, zap: Zap, building: Building2 } as const;
-const PLAN_TINT = { gift: "#f59e0b", wallet: "#10b981", zap: "#2563eb", building: "#6366f1" } as const;
+const PLAN_TINT = { rocket: "#0ea5e9", trending: "#2563eb", briefcase: "#8b5cf6", crown: "#f59e0b" } as const;
 
-function Stat({ value, label, icon: Icon, hot }: { value: number; label: string; icon: typeof LayoutGrid; hot: boolean }) {
-  const { ref, value: v } = useCountUp<HTMLDivElement>(value, 1400);
-  return (
-    <div ref={ref} className={cn("flex-1 rounded-2xl px-3 py-3", hot ? "bg-white/10" : "bg-soft")}>
-      <Icon size={15} className={hot ? "text-blue-100" : "text-brand"} />
-      <p className={cn("mt-1 font-display text-xl font-extrabold", hot ? "text-white" : "text-fg")}>{v.toLocaleString()}</p>
-      <p className={cn("text-[11px]", hot ? "text-blue-100" : "text-muted")}>{label}</p>
-    </div>
-  );
+/** Short card bullets, e.g. "3 human agents" or "Unlimited channels". */
+function highlight(value: LimitValue, one: string, many: string) {
+  if (value === "unlimited") return `Unlimited ${many}`;
+  if (typeof value === "number") return `${formatLimit(value)} ${value === 1 ? one : many}`;
+  return many;
 }
 
 function PlanCard({ plan, i, onView }: { plan: Plan; i: number; onView: (p: Plan) => void }) {
-  const free = plan.price === 0;
   const hot = !!plan.popular;
   const Icon = PLAN_ICON[plan.icon];
   const tint = PLAN_TINT[plan.icon];
+  const l = plan.limits;
+  const bullets = [
+    highlight(l.workspaces, "workspace", "workspaces"),
+    highlight(l.agents, "human agent", "human agents"),
+    highlight(l.channels, "channel", "channels"),
+    highlight(l.contacts, "contact", "contacts"),
+    highlight(l.aiAgents, "AI assistant", "AI assistants"),
+    `${highlight(l.aiReplies, "AI reply", "AI replies")} / month`,
+  ];
 
   return (
     <Reveal delay={i * 0.1} className="h-full">
@@ -46,11 +49,11 @@ function PlanCard({ plan, i, onView }: { plan: Plan; i: number; onView: (p: Plan
       >
         {hot && (
           <motion.span
-            className="absolute -top-3.5 left-1/2 flex -translate-x-1/2 items-center gap-1 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider text-white shadow-lg"
+            className="absolute -top-3.5 left-1/2 flex -translate-x-1/2 items-center gap-1 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider text-white shadow-lg"
             animate={{ y: [0, -3, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
-            <Sparkles size={12} /> Most popular
+            <Star size={12} className="fill-white" /> Most popular
           </motion.span>
         )}
 
@@ -70,43 +73,128 @@ function PlanCard({ plan, i, onView }: { plan: Plan; i: number; onView: (p: Plan
           <span className={cn("font-display text-5xl font-extrabold tracking-tight", hot ? "text-white" : "text-fg")}>${plan.price}</span>
           <span className={cn("mb-1.5 text-sm font-medium", hot ? "text-blue-100" : "text-muted")}>/month</span>
         </div>
-        <p className={cn("mt-2 text-[13px]", hot ? "text-blue-100" : "text-muted")}>
-          {plan.workspaces} workspace{plan.workspaces === 1 ? "" : "s"} · {plan.contactsPerWorkspace.toLocaleString()} contacts each
-        </p>
 
-        <div className="mt-5 flex gap-2">
-          <Stat value={plan.workspaces} label={plan.workspaces === 1 ? "workspace" : "workspaces"} icon={LayoutGrid} hot={hot} />
-          <Stat value={plan.contactsPerWorkspace} label="contacts each" icon={Contact} hot={hot} />
-        </div>
+        <ul className={cn("mt-6 grid gap-2.5 border-t pt-5 text-sm", hot ? "border-white/15" : "border-line")}>
+          {bullets.map((b) => (
+            <li key={b} className={cn("flex items-center gap-2.5", hot ? "text-blue-50" : "text-slate-600")}>
+              <span className={cn("flex h-5 w-5 shrink-0 items-center justify-center rounded-full", hot ? "bg-white/20 text-white" : "bg-brand/10 text-brand")}>
+                <Check size={12} strokeWidth={3} />
+              </span>
+              {b}
+            </li>
+          ))}
+        </ul>
 
-        <div className="mt-auto pt-6" />
-        {(() => {
-          const btn = cn(
-            "group flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-bold transition-all",
+        <div className="mt-auto pt-7" />
+        <button
+          type="button"
+          onClick={() => onView(plan)}
+          className={cn(
+            "flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-bold transition-all",
             hot
               ? "bg-white text-brand hover:shadow-[0_0_40px_-6px_rgba(255,255,255,0.8)]"
-              : free
-                ? "bg-brand text-white hover:shadow-[0_12px_30px_-10px_var(--brand)]"
-                : "border border-line bg-white text-fg hover:border-brand/40 hover:text-brand",
-          );
-          // Paid plans open the plan details popup; the free plan goes straight to sign-up.
-          return plan.details ? (
-            <button type="button" onClick={() => onView(plan)} className={btn}>
-              <Eye size={15} /> View plans
-            </button>
-          ) : (
-            <a href={links.signup} className={btn}>
-              Start free <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
-            </a>
-          );
-        })()}
+              : "border border-line bg-white text-fg hover:border-brand/40 hover:text-brand",
+          )}
+        >
+          <Eye size={15} /> View plans
+        </button>
       </motion.div>
     </Reveal>
   );
 }
 
+/** Full side-by-side list of every limit, the same rows as the boss's pricing table. */
+function CompareTable({ onView }: { onView: (p: Plan) => void }) {
+  return (
+    <Reveal className="mt-20">
+      <div className="text-center">
+        <h3 className="font-display text-3xl font-bold text-fg sm:text-4xl">
+          Compare <span className="text-gradient">every plan</span>
+        </h3>
+        <p className="mt-3 text-muted">Everything you get, side by side.</p>
+      </div>
+
+      <div className="glass mt-10 overflow-hidden rounded-3xl">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[760px] border-collapse text-left">
+            <thead>
+              <tr className="border-b border-line">
+                <th className="w-[26%] px-6 py-5 text-sm font-semibold text-muted">Features</th>
+                {plans.map((p) => (
+                  <th key={p.id} className={cn("px-4 py-5 text-center align-bottom", p.popular && "bg-brand/[0.06]")}>
+                    {p.popular && (
+                      <span className="mb-2 inline-flex items-center gap-1 rounded-full bg-amber-400/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-600">
+                        <Star size={10} className="fill-amber-400 text-amber-400" /> Popular
+                      </span>
+                    )}
+                    <p className="font-display text-lg font-bold text-fg">{p.name}</p>
+                    <p className="text-sm text-muted">
+                      <span className="font-display text-xl font-extrabold text-fg">${p.price}</span> /month
+                    </p>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {PLAN_FEATURES.map((f, r) => {
+                const FIcon = FEATURE_ICON[f.key];
+                const color = FEATURE_COLOR[f.key];
+                return (
+                  <motion.tr
+                    key={f.key}
+                    initial={{ opacity: 0, y: 8 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: r * 0.05 }}
+                    className="border-b border-line last:border-b-0 hover:bg-soft/70"
+                  >
+                    <td className="px-6 py-4">
+                      <span className="flex items-center gap-3 font-medium text-fg">
+                        <span
+                          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
+                          style={{ background: `color-mix(in oklab, ${color} 12%, white)`, color }}
+                        >
+                          <FIcon size={16} />
+                        </span>
+                        {f.label}
+                      </span>
+                    </td>
+                    {plans.map((p) => (
+                      <td key={p.id} className={cn("px-4 py-4 text-center", p.popular && "bg-brand/[0.06]")}>
+                        <LimitBadge value={p.limits[f.key]} />
+                        {p.notes?.[f.key] && <p className="mt-0.5 text-[11px] text-muted">{p.notes[f.key]}</p>}
+                      </td>
+                    ))}
+                  </motion.tr>
+                );
+              })}
+              <tr>
+                <td className="px-6 py-5" />
+                {plans.map((p) => (
+                  <td key={p.id} className={cn("px-4 py-5 text-center", p.popular && "bg-brand/[0.06]")}>
+                    <button
+                      type="button"
+                      onClick={() => onView(p)}
+                      className={cn(
+                        "inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-bold transition",
+                        p.popular ? "bg-brand text-white hover:shadow-[0_10px_24px_-10px_var(--brand)]" : "border border-line bg-white text-fg hover:border-brand/40 hover:text-brand",
+                      )}
+                    >
+                      <Eye size={14} /> View plans
+                    </button>
+                  </td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </Reveal>
+  );
+}
+
 const LINES = [
-  { label: "Ignite plan · monthly", amount: "$299" },
+  { label: "Growth plan · monthly", amount: "$99" },
   { label: "Extra workspaces", amount: "+ usage" },
   { label: "Coupon applied", amount: "− discount" },
 ];
@@ -179,7 +267,7 @@ export function Pricing() {
         icon={<CreditCard size={14} />}
         title="Simple plans."
         highlight="Honest billing."
-        subtitle="Start free and upgrade when you're ready. Every plan gives you the shared inbox; bigger plans give you more workspaces and more contacts in each one."
+        subtitle="Pick the plan that fits your team. Every plan includes the shared inbox and campaigns; bigger plans add more human agents, channels, contacts and AI assistants."
       />
 
       <div className="relative mt-16 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
@@ -187,6 +275,8 @@ export function Pricing() {
           <PlanCard key={p.id} plan={p} i={i} onView={setViewing} />
         ))}
       </div>
+
+      <CompareTable onView={setViewing} />
       <PlanDetailsModal plan={viewing} onClose={closeDetails} />
 
       <div className="relative mt-20 grid items-center gap-10 lg:grid-cols-2">

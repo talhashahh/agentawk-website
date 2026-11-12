@@ -162,7 +162,7 @@ export function Campaigns() {
           <ChannelBadge id="whatsapp" className="h-7 w-7 ring-2 ring-white" />
           <ChannelBadge id="messenger" className="h-7 w-7 ring-2 ring-white" />
         </span>
-        Broadcast on WhatsApp and Messenger
+        Send campaigns on WhatsApp and Messenger
       </Reveal>
     </Section>
   );

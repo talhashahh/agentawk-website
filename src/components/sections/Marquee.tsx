@@ -11,7 +11,7 @@ const loop = (duration: number, extra: object = {}) => ({ duration, repeat: Infi
 // Shown like a "trusted by" logo strip: grey wordmarks that slowly scroll by.
 const ITEMS: { label: string; icon: LucideIcon; move: TargetAndTransition }[] = [
   { label: "Shared Inbox", icon: Inbox, move: { y: [0, -3, 0], transition: loop(2.2) } },
-  { label: "Smart Flows", icon: Workflow, move: { rotate: [0, 10, -10, 0], transition: loop(3) } },
+  { label: "Bots", icon: Workflow, move: { rotate: [0, 10, -10, 0], transition: loop(3) } },
   { label: "Campaigns", icon: Megaphone, move: { rotate: [0, -12, 8, 0], transition: loop(1.8, { repeatDelay: 0.8 }) } },
   { label: "AI Assistants", icon: Sparkles, move: { scale: [1, 1.2, 1], transition: loop(2.4) } },
   { label: "Workspaces", icon: LayoutGrid, move: { rotate: [0, 90, 90, 180], transition: loop(3.4) } },

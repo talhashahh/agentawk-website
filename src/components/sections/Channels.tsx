@@ -16,7 +16,7 @@ const STORIES: Story[] = [
   {
     id: "whatsapp",
     title: "WhatsApp",
-    desc: "Official Business API, Coexistence with the WhatsApp app, or a quick QR scan. Templates, voice notes and broadcasts included.",
+    desc: "Official Business API, Coexistence with the WhatsApp app, or a quick QR scan. Templates, voice notes and campaigns included.",
     customer: "Ali Raza",
     chat: [
       { from: "customer", text: "Salam! Is the order #2381 shipped? 📦" },

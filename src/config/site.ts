@@ -18,34 +18,91 @@ export const company = {
   address: "Pakistan",
 };
 
+/** A plan limit: a number, "unlimited", or for yes/no features true/false. */
+export type LimitValue = number | "unlimited" | boolean;
+
+/** Every row of the plan comparison, in the order it is shown. */
+export const PLAN_FEATURES = [
+  { key: "workspaces", label: "Workspaces" },
+  { key: "agents", label: "Human Agents" },
+  { key: "channels", label: "Channels" },
+  { key: "contacts", label: "Contacts" },
+  { key: "aiAgents", label: "AI Assistants" },
+  { key: "aiReplies", label: "AI replies / month" },
+  { key: "automations", label: "Bots" },
+  { key: "campaigns", label: "Campaigns" },
+  { key: "api", label: "API access" },
+] as const;
+
+export type PlanFeatureKey = (typeof PLAN_FEATURES)[number]["key"];
+
 export type Plan = {
   id: string;
   name: string;
   tagline: string;
   /** Monthly price in USD. */
   price: number;
-  icon: "gift" | "wallet" | "zap" | "building";
-  workspaces: number;
-  contactsPerWorkspace: number;
+  icon: "rocket" | "trending" | "briefcase" | "crown";
   popular?: boolean;
-  /** Extra limits shown in the "View pricing" popup (same as the app's checkout page). */
-  details?: {
-    agentsPerWorkspace: number;
-    aiAssistantsPerWorkspace: number;
-    /** How many of each channel type are included per workspace. */
-    channelsEach: number;
-    whatsappQrExcluded?: boolean;
-    importExportContacts?: boolean;
-  };
+  limits: Record<PlanFeatureKey, LimitValue>;
+  /** Small extra line under a value, e.g. the price of extra workspaces. */
+  notes?: Partial<Record<PlanFeatureKey, string>>;
 };
 
-// Same plans, prices and limits as the organization Billing → Plans page in the app.
+// The pricing the boss sent on 2026-11-12.
 export const plans: Plan[] = [
-  { id: "free-plan", name: "Free", tagline: "Try it out, on us", price: 0, icon: "gift", workspaces: 1, contactsPerWorkspace: 50 },
-  { id: "premium-plan", name: "Premium plan", tagline: "For growing businesses", price: 19, icon: "wallet", workspaces: 5, contactsPerWorkspace: 1000,
-    details: { agentsPerWorkspace: 5, aiAssistantsPerWorkspace: 20, channelsEach: 2, whatsappQrExcluded: true, importExportContacts: true } },
-  { id: "ignite-plan", name: "Ignite plan", tagline: "For scaling teams", price: 299, icon: "zap", workspaces: 15, contactsPerWorkspace: 3000, popular: true,
-    details: { agentsPerWorkspace: 15, aiAssistantsPerWorkspace: 50, channelsEach: 4 } },
-  { id: "enterprise-plan", name: "Enterprise plan", tagline: "Built for resellers", price: 599, icon: "building", workspaces: 50, contactsPerWorkspace: 10000,
-    details: { agentsPerWorkspace: 25, aiAssistantsPerWorkspace: 60, channelsEach: 6 } },
+  {
+    id: "starter",
+    name: "Starter",
+    tagline: "For small teams getting started",
+    price: 39,
+    icon: "rocket",
+    limits: {
+      workspaces: 1, agents: 3, channels: 2, contacts: 1000, aiAgents: 1,
+      aiReplies: 2000, automations: 5, campaigns: true, api: false,
+    },
+  },
+  {
+    id: "growth",
+    name: "Growth",
+    tagline: "For growing teams that chat all day",
+    price: 99,
+    icon: "trending",
+    popular: true,
+    limits: {
+      workspaces: 1, agents: 10, channels: 5, contacts: 10000, aiAgents: 3,
+      aiReplies: 10000, automations: "unlimited", campaigns: true, api: true,
+    },
+  },
+  {
+    id: "business",
+    name: "Business",
+    tagline: "For brands with several teams",
+    price: 249,
+    icon: "briefcase",
+    limits: {
+      workspaces: 3, agents: 25, channels: "unlimited", contacts: 50000, aiAgents: 10,
+      aiReplies: 50000, automations: "unlimited", campaigns: true, api: true,
+    },
+  },
+  {
+    id: "organization",
+    name: "Organization",
+    tagline: "For organizations running many brands or clients",
+    price: 499,
+    icon: "crown",
+    limits: {
+      workspaces: 10, agents: "unlimited", channels: "unlimited", contacts: 100000, aiAgents: "unlimited",
+      aiReplies: 100000, automations: "unlimited", campaigns: true, api: true,
+    },
+    notes: { workspaces: "+$20 per extra workspace" },
+  },
 ];
+
+/** Formats a limit for display: 1,000 / Unlimited / Included / Not included. */
+export function formatLimit(v: LimitValue): string {
+  if (v === "unlimited") return "Unlimited";
+  if (v === true) return "Included";
+  if (v === false) return "Not included";
+  return v.toLocaleString("en-US");
+}

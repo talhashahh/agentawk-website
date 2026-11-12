@@ -3,30 +3,65 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { X, Building2, MessageSquare, Users, Bot, Sparkles, Upload, Gift, Wallet, Zap, Crown } from "lucide-react";
-import type { Plan } from "@/config/site";
+import {
+  X, Check, Infinity as InfinityIcon, LayoutGrid, Headset, Radio, Contact, Bot, MessagesSquare, Workflow, Megaphone, Code,
+  Rocket, TrendingUp, Briefcase, Crown, Star,
+} from "lucide-react";
+import { PLAN_FEATURES, formatLimit, type LimitValue, type Plan, type PlanFeatureKey } from "@/config/site";
+import { cn } from "@/lib/cn";
 
-const PLAN_ICON = { gift: Gift, wallet: Wallet, zap: Zap, building: Crown } as const;
+export const PLAN_ICON = { rocket: Rocket, trending: TrendingUp, briefcase: Briefcase, crown: Crown } as const;
 
-/** Rows mirror the plan checkout page in the app, minus the payment form. */
-function featureRows(plan: Plan) {
-  const d = plan.details;
-  if (!d) return [];
-  return [
-    { name: "Workspaces", sub: `${plan.workspaces} included`, icon: Building2, color: "#0ea5e9" },
-    { name: "Contacts", sub: `${plan.contactsPerWorkspace.toLocaleString()} per workspace`, icon: MessageSquare, color: "#10b981" },
-    { name: "Human Agents", sub: `${d.agentsPerWorkspace} per workspace`, icon: Users, color: "#8b5cf6" },
-    { name: "AI Assistants", sub: `${d.aiAssistantsPerWorkspace} per workspace`, icon: Bot, color: "#6366f1" },
-    {
-      name: "Communication Channels",
-      sub: `${d.channelsEach} of each included${d.whatsappQrExcluded ? " (WhatsApp QR excluded)" : ""}`,
-      icon: Sparkles,
-      color: "#f59e0b",
-    },
-    ...(d.importExportContacts
-      ? [{ name: "Import / Export Contacts", sub: "Included", icon: Upload, color: "var(--brand)" }]
-      : []),
-  ];
+export const FEATURE_ICON: Record<PlanFeatureKey, typeof Bot> = {
+  workspaces: LayoutGrid,
+  agents: Headset,
+  channels: Radio,
+  contacts: Contact,
+  aiAgents: Bot,
+  aiReplies: MessagesSquare,
+  automations: Workflow,
+  campaigns: Megaphone,
+  api: Code,
+};
+
+export const FEATURE_COLOR: Record<PlanFeatureKey, string> = {
+  workspaces: "#0ea5e9",
+  agents: "#8b5cf6",
+  channels: "#f59e0b",
+  contacts: "#10b981",
+  aiAgents: "#6366f1",
+  aiReplies: "#ec4899",
+  automations: "#2563eb",
+  campaigns: "#f97316",
+  api: "#64748b",
+};
+
+/** A plan value as a small badge: number, Unlimited, Included or Not included. */
+export function LimitBadge({ value, onDark }: { value: LimitValue; onDark?: boolean }) {
+  if (value === "unlimited") {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[13px] font-semibold text-emerald-600">
+        <InfinityIcon size={14} /> Unlimited
+      </span>
+    );
+  }
+  if (value === true) {
+    return (
+      <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-white" title="Included">
+        <Check size={14} strokeWidth={3} />
+        <span className="sr-only">Included</span>
+      </span>
+    );
+  }
+  if (value === false) {
+    return (
+      <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-rose-500/10 text-rose-500" title="Not included">
+        <X size={14} strokeWidth={3} />
+        <span className="sr-only">Not included</span>
+      </span>
+    );
+  }
+  return <span className={cn("text-[15px] font-bold", onDark ? "text-white" : "text-fg")}>{formatLimit(value)}</span>;
 }
 
 export function PlanDetailsModal({ plan, onClose }: { plan: Plan | null; onClose: () => void }) {
@@ -61,7 +96,7 @@ export function PlanDetailsModal({ plan, onClose }: { plan: Plan | null; onClose
           <motion.div
             role="dialog"
             aria-modal="true"
-            aria-label={`${plan.name} pricing details`}
+            aria-label={`${plan.name} plan details`}
             className="relative max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-3xl bg-white shadow-[0_40px_120px_-30px_rgba(15,23,42,0.6)]"
             initial={{ opacity: 0, y: 30, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -78,7 +113,7 @@ export function PlanDetailsModal({ plan, onClose }: { plan: Plan | null; onClose
               <X size={18} />
             </button>
 
-            <div className="grid gap-6 p-5 sm:p-8 md:grid-cols-[1.35fr_1fr]">
+            <div className="grid gap-6 p-5 sm:p-8 md:grid-cols-[1.4fr_1fr]">
               <PlanFeatures plan={plan} />
               <PlanSummary plan={plan} />
             </div>
@@ -92,66 +127,73 @@ export function PlanDetailsModal({ plan, onClose }: { plan: Plan | null; onClose
 
 function PlanFeatures({ plan }: { plan: Plan }) {
   const Icon = PLAN_ICON[plan.icon];
-  const rows = featureRows(plan);
   return (
     <div className="overflow-hidden rounded-2xl border border-line">
-      <div className="flex items-center gap-3 border-b border-line px-5 py-4">
+      <div className="flex items-center gap-3 border-b border-line px-5 py-4 pr-14 md:pr-5">
         <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand">
           <Icon size={19} />
         </span>
         <div>
-          <p className="font-display text-lg font-bold text-fg">{plan.name}</p>
+          <p className="flex items-center gap-2 font-display text-lg font-bold text-fg">
+            {plan.name}
+            {plan.popular && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-amber-400/15 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-amber-600">
+                <Star size={11} className="fill-amber-400 text-amber-400" /> Popular
+              </span>
+            )}
+          </p>
           <p className="text-[12px] text-muted">Everything included in this plan</p>
         </div>
       </div>
       <ul>
-        {rows.map((r, i) => (
-          <motion.li
-            key={r.name}
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.08 + i * 0.05 }}
-            className="flex items-center gap-4 border-b border-line px-5 py-4 last:border-b-0"
-          >
-            <span
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
-              style={{ background: `color-mix(in oklab, ${r.color} 12%, white)`, color: r.color }}
+        {PLAN_FEATURES.map((f, i) => {
+          const FIcon = FEATURE_ICON[f.key];
+          const color = FEATURE_COLOR[f.key];
+          const note = plan.notes?.[f.key];
+          return (
+            <motion.li
+              key={f.key}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.06 + i * 0.04 }}
+              className="flex items-center gap-4 border-b border-line px-5 py-3.5 last:border-b-0"
             >
-              <r.icon size={18} />
-            </span>
-            <div>
-              <p className="font-semibold text-fg">{r.name}</p>
-              <p className="text-sm text-muted">{r.sub}</p>
-            </div>
-          </motion.li>
-        ))}
+              <span
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
+                style={{ background: `color-mix(in oklab, ${color} 12%, white)`, color }}
+              >
+                <FIcon size={17} />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="font-semibold text-fg">{f.label}</p>
+                {note && <p className="text-[12px] text-muted">{note}</p>}
+              </div>
+              <LimitBadge value={plan.limits[f.key]} />
+            </motion.li>
+          );
+        })}
       </ul>
     </div>
   );
 }
 
 function PlanSummary({ plan }: { plan: Plan }) {
-  const d = plan.details;
-  const includes = [
-    `${plan.workspaces} workspaces`,
-    `${plan.contactsPerWorkspace.toLocaleString()} contacts/workspace`,
-    ...(d
-      ? [
-          `${d.agentsPerWorkspace} agents/workspace`,
-          `${d.aiAssistantsPerWorkspace} AI assistants/workspace`,
-          `${d.channelsEach} channel/workspace`,
-        ]
-      : []),
-  ].join(" · ");
-
   return (
     <div className="flex flex-col rounded-2xl border border-line bg-soft/60 p-5 sm:p-6">
       <p className="font-display text-lg font-bold text-fg">Pricing summary</p>
-      <div className="mt-5 flex items-start justify-between gap-3">
-        <p className="font-semibold text-fg">{plan.name}: monthly</p>
+      <p className="mt-1 text-sm text-muted">{plan.tagline}</p>
+
+      <div className="mt-6 flex items-start justify-between gap-3">
+        <p className="font-semibold text-fg">{plan.name} plan: monthly</p>
         <p className="font-display text-lg font-bold text-fg">${plan.price.toFixed(2)}</p>
       </div>
-      <p className="mt-2 text-[13px] leading-relaxed text-muted">Includes: {includes}</p>
+      {plan.notes?.workspaces && (
+        <div className="mt-2 flex items-start justify-between gap-3 text-[13px] text-muted">
+          <p>Extra workspaces</p>
+          <p>{plan.notes.workspaces.replace(/ per extra workspace$/, " each")}</p>
+        </div>
+      )}
+
       <div className="mt-6 flex items-end justify-between border-t border-line pt-5">
         <p className="font-semibold text-fg">Total</p>
         <p>
