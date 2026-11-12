@@ -21,11 +21,11 @@ const FAQS = [
   },
   {
     q: "I run more than one business. Do I need separate accounts?",
-    a: "No. One agency account holds as many workspaces as your plan allows: one per brand, branch or client, each with its own channels and its own team.",
+    a: "No. One organization account holds as many workspaces as your plan allows: one per brand, branch or client, each with its own channels and its own team.",
   },
   {
     q: "Can I put my own logo and colors on it?",
-    a: "Yes. Paid plans let you add your logo, icon and brand colors, and higher plans support full white-label for agencies that resell AgentAwk.",
+    a: "Yes. Paid plans let you add your logo, icon and brand colors, and higher plans support full white-label for organizations that resell AgentAwk.",
   },
   {
     q: "Do I need to know coding to build bots?",

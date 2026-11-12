@@ -1,9 +1,11 @@
 "use client";
 
+import { useCallback, useState } from "react";
 import { motion } from "framer-motion";
 import {
-  CreditCard, Receipt, Ticket, ShieldCheck, Gauge, Sparkles, ArrowRight, Gift, Wallet, Zap, Building2, LayoutGrid, Contact,
+  CreditCard, Receipt, Ticket, ShieldCheck, Gauge, Sparkles, ArrowRight, Gift, Wallet, Zap, Building2, LayoutGrid, Contact, Eye,
 } from "lucide-react";
+import { PlanDetailsModal } from "@/components/sections/PlanDetailsModal";
 import { Section, SectionHeading, Reveal, Glow } from "@/components/ui/Section";
 import { BotMark } from "@/components/brand/Logo";
 import { plans, links, type Plan } from "@/config/site";
@@ -24,7 +26,7 @@ function Stat({ value, label, icon: Icon, hot }: { value: number; label: string;
   );
 }
 
-function PlanCard({ plan, i }: { plan: Plan; i: number }) {
+function PlanCard({ plan, i, onView }: { plan: Plan; i: number; onView: (p: Plan) => void }) {
   const free = plan.price === 0;
   const hot = !!plan.popular;
   const Icon = PLAN_ICON[plan.icon];
@@ -78,19 +80,26 @@ function PlanCard({ plan, i }: { plan: Plan; i: number }) {
         </div>
 
         <div className="mt-auto pt-6" />
-        <a
-          href={links.signup}
-          className={cn(
-            "group flex items-center justify-center gap-2 rounded-full py-3 text-sm font-bold transition-all",
+        {(() => {
+          const btn = cn(
+            "group flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-bold transition-all",
             hot
               ? "bg-white text-brand hover:shadow-[0_0_40px_-6px_rgba(255,255,255,0.8)]"
               : free
                 ? "bg-brand text-white hover:shadow-[0_12px_30px_-10px_var(--brand)]"
                 : "border border-line bg-white text-fg hover:border-brand/40 hover:text-brand",
-          )}
-        >
-          {free ? "Start free" : "Upgrade"} <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
-        </a>
+          );
+          // Paid plans open the plan details popup; the free plan goes straight to sign-up.
+          return plan.details ? (
+            <button type="button" onClick={() => onView(plan)} className={btn}>
+              <Eye size={15} /> View plans
+            </button>
+          ) : (
+            <a href={links.signup} className={btn}>
+              Start free <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
+            </a>
+          );
+        })()}
       </motion.div>
     </Reveal>
   );
@@ -157,6 +166,9 @@ const BILLING = [
 ];
 
 export function Pricing() {
+  const [viewing, setViewing] = useState<Plan | null>(null);
+  const closeDetails = useCallback(() => setViewing(null), []);
+
   return (
     <Section id="pricing" className="overflow-hidden">
       <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-full">
@@ -172,9 +184,10 @@ export function Pricing() {
 
       <div className="relative mt-16 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
         {plans.map((p, i) => (
-          <PlanCard key={p.id} plan={p} i={i} />
+          <PlanCard key={p.id} plan={p} i={i} onView={setViewing} />
         ))}
       </div>
+      <PlanDetailsModal plan={viewing} onClose={closeDetails} />
 
       <div className="relative mt-20 grid items-center gap-10 lg:grid-cols-2">
         <Glow className="left-0 top-0 h-80 w-80" />
@@ -183,7 +196,7 @@ export function Pricing() {
             Billing that <span className="text-gradient">never surprises you.</span>
           </h3>
           <p className="mt-4 text-muted">
-            Your agency&apos;s billing lives in one clean screen: your plan, what you&apos;ve used, your coupons and every invoice.
+            Your organization&apos;s billing lives in one clean screen: your plan, what you&apos;ve used, your coupons and every invoice.
             No hidden fees, and no digging through emails.
           </p>
           <ul className="mt-8 grid gap-4 sm:grid-cols-2">

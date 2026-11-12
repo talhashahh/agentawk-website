@@ -70,11 +70,11 @@ export function Workspaces() {
         icon={<LayoutGrid size={14} />}
         title="One account."
         highlight="As many businesses as you run."
-        subtitle="Run every brand, branch or client from a single agency account. Create a workspace, connect its channels, assign your people, and you're done."
+        subtitle="Run every brand, branch or client from a single organization account. Create a workspace, connect its channels, assign your people, and you're done."
       />
 
       <div className="relative mx-auto mt-16 max-w-5xl">
-        {/* agency */}
+        {/* organization */}
         <Reveal className="relative z-10 mx-auto w-fit">
           <div className="flex items-center gap-3 rounded-2xl border border-brand/20 bg-white px-5 py-4 shadow-[0_20px_50px_-20px_var(--brand)]">
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand/15">
@@ -82,7 +82,7 @@ export function Workspaces() {
             </span>
             <div>
               <p className="flex items-center gap-1.5 font-semibold text-fg">
-                <Building2 size={15} className="text-brand" /> Your Agency
+                <Building2 size={15} className="text-brand" /> Your Organization
               </p>
               <p className="text-[12px] text-muted">Billing, users & every workspace</p>
             </div>

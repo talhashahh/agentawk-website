@@ -28,12 +28,24 @@ export type Plan = {
   workspaces: number;
   contactsPerWorkspace: number;
   popular?: boolean;
+  /** Extra limits shown in the "View pricing" popup (same as the app's checkout page). */
+  details?: {
+    agentsPerWorkspace: number;
+    aiAssistantsPerWorkspace: number;
+    /** How many of each channel type are included per workspace. */
+    channelsEach: number;
+    whatsappQrExcluded?: boolean;
+    importExportContacts?: boolean;
+  };
 };
 
-// Same plans, prices and limits as the agency Billing → Plans page in the app.
+// Same plans, prices and limits as the organization Billing → Plans page in the app.
 export const plans: Plan[] = [
   { id: "free-plan", name: "Free", tagline: "Try it out, on us", price: 0, icon: "gift", workspaces: 1, contactsPerWorkspace: 50 },
-  { id: "premium-plan", name: "Premium plan", tagline: "For growing businesses", price: 19, icon: "wallet", workspaces: 5, contactsPerWorkspace: 1000 },
-  { id: "ignite-plan", name: "Ignite plan", tagline: "For scaling teams", price: 299, icon: "zap", workspaces: 15, contactsPerWorkspace: 3000, popular: true },
-  { id: "enterprise-plan", name: "Enterprise plan", tagline: "Built for resellers", price: 599, icon: "building", workspaces: 50, contactsPerWorkspace: 10000 },
+  { id: "premium-plan", name: "Premium plan", tagline: "For growing businesses", price: 19, icon: "wallet", workspaces: 5, contactsPerWorkspace: 1000,
+    details: { agentsPerWorkspace: 5, aiAssistantsPerWorkspace: 20, channelsEach: 2, whatsappQrExcluded: true, importExportContacts: true } },
+  { id: "ignite-plan", name: "Ignite plan", tagline: "For scaling teams", price: 299, icon: "zap", workspaces: 15, contactsPerWorkspace: 3000, popular: true,
+    details: { agentsPerWorkspace: 15, aiAssistantsPerWorkspace: 50, channelsEach: 4 } },
+  { id: "enterprise-plan", name: "Enterprise plan", tagline: "Built for resellers", price: 599, icon: "building", workspaces: 50, contactsPerWorkspace: 10000,
+    details: { agentsPerWorkspace: 25, aiAssistantsPerWorkspace: 60, channelsEach: 6 } },
 ];
